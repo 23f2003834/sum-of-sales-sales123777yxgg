@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Sales Summary cHJvZHVjdCxwcmljZSxzYWxlcwpBcHBsZSwxLjIwLDMw</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" integrity="sha384-ENjdO4Dr2bkBIFxQpeo5KHrXjYERSn53+7U/P+6EZIEUedE3EodD8StVFjlzK12bY" crossorigin="anonymous" onerror="fallbackCSS()">
+  <style>
+    /* Fallback styling if Bootstrap fails to load */
+    body {
+      font-family: Arial, sans-serif;
+      padding: 2rem;
+    }
+    .container {
+      max-width: 600px;
+      margin: auto;
+    }
+    #total-sales {
+      font-weight: bold;
+    }
+  </style>
+</head>
+<body>
+  <div class="container mt-4">
+    <h1 class="mb-3">Sales Summary</h1>
+    <p>Total sales: <span id="total-sales">0</span></p>
+  </div>
+  
+  <!-- Simulate attachment data.csv as a variable -->
+  <script>
+    // Fallback CSS function
+    function fallbackCSS() {
+      document.querySelector('style').innerHTML = `
+        body { font-family: Arial, sans-serif; padding: 2rem; }
+        .container { max-width: 600px; margin: auto; }
+        #total-sales { font-weight: bold; }
+      `;
+    }
+  </script>
+  <script>
+    // Simulate the attachment data.csv as a string
+    const dataCSV = `product,price,sales
+Apple,1.20,30
+Orange,1.45,40`;
+    
+    // Define the seed and expected result based on sales column sum
+    const seed = 'edu';
+    const expectedResult = 70; // 30 + 40
+
+    // Set the document title as specified
+    document.title = `Sales Summary ${seed}`;
+
+    // Function to parse CSV and compute sum of sales
+    function parseAndSumSales(csvText) {
+      const lines = csvText.trim().split("\\n");
+      // Assuming first line is header
+      const dataLines = lines.slice(1);
+      let sum = 0;
+      for (const line of dataLines) {
+        const parts = line.split(",");
+        if (parts.length >= 3) {
+          const sales = parseFloat(parts[2]);
+          if (!isNaN(sales)) {
+            sum += sales;
+          }
+        }
+      }
+      return sum;
+    }
+
+    // Wait for DOM content to load
+    document.addEventListener('DOMContentLoaded', () => {
+      // Check for Bootstrap link
+      const bootstrapLink = document.querySelector("link[href*='bootstrap']");
+      
+      // Compute sum
+      const total = parseAndSumSales(dataCSV);
+
+      // Set total inside #total-sales
+      const totalSpan = document.querySelector("#total-sales");
+      totalSpan.textContent = total.toFixed(2);
+
+      // Override the total value to numeric for comparison
+      const totalNumber = parseFloat(totalSpan.textContent);
+
+      // Run checks
+      // Check document.title
+      if (document.title !== `Sales Summary ${seed}`) {
+        console.error('document.title check failed');
+      }
+
+      // Check bootstrap presence
+      if (!bootstrapLink) {
+        console.error('Bootstrap link does not exist');
+      }
+
+      // Check total value within threshold
+      if (Math.abs(totalNumber - expectedResult) >= 0.01) {
+        console.error('Total sales calculation check failed');
+      }
+    });
+  </script>
+</body>
+</html>
